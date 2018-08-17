@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('partials/meta'); -%>
+    <title>
+      
+      <%= process.env.APP_NAME %> - <%= title %>
+      
+    </title>
+    <%- include('partials/include_styles'); -%>
+</head>
+
+<body>
+
+    <%- include('partials/nav'); -%>
+    
+    <div class="container">
+      
+      
+      
+      <div class="row">
+        <div class="col-lg-12">
+          <h4>TODO and Ref Links</h4>
+          <p>https://github.com/hiiamrohit/Countries-States-Cities-database</p>
+          <ul>
+              <li>
+                Country state city IO
+              </li>
+              <li>
+                API docs
+              </li>
+              <li>API auth</li>
+              <li>add locations</li>
+          </ul>
+          <p><pre>apidoc -i emb-payg-traffic/controllers/ -o apidoc/</pre></p>
+          <p><pre>npm run doc</pre></p>
+          <p>
+              https://restcountries.eu/
+          </p>
+          <p>
+              https://screenshotlayer.com/
+          </p>
+        </div>
+      </div>
+      
+      
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <%- include('partials/include_js'); -%>
+    
+
+</body>
+
+</html>

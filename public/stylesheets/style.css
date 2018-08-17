@@ -1,0 +1,9 @@
+@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);
+body {
+  font-family: "Nunito", Helvetica, Arial, sans-serif;
+  padding-top: 70px;
+}
+h1,h2,h3,h4,h5,h6 {
+  font-family: 'Raleway', Helvetica, Arial, sans-serif;
+}
+
