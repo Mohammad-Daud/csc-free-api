@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('partials/meta'); -%>
+        <title>
+
+            <%= process.env.APP_NAME %> -
+                <%= title %>
+
+        </title>
+        <%- include('partials/include_styles'); -%>
+</head>
+
+<body>
+
+    <%- include('partials/nav'); -%>
+
+        <div class="container">
+
+
+
+            <div class="row">
+                <div class="col-lg-12">
+                    
+                    <div class="alert alert-info">
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                        <strong>Note:</strong> Server restart needed when change in .env file.
+                    </div>
+                    
+                    <h4>Register a Middleware</h4>
+                    <pre>app.use()</pre>
+                    <p>
+                        A Middleware function always accept 3 Params
+                    </p>
+                    <ol>
+                        <li>Request</li>
+                        <li>Response</li>
+                        <li>next</li>
+                    </ol>
+                    <strong>Example:</strong>
+                    <pre>
+<!--                 -->app.use(function(req, res, next){ 
+<!--                 -->    // function body
+<!--                 -->    next(); //Pass controll to next in pipeline
+<!--                 -->});</pre>
+                    <p>
+                        Middleware functions always call in sequence
+                    </p>
+                    <strong>Example:</strong>
+                    <p>
+                        Middleware 1 function will exe first then Middleware 2 function
+                        will exe.
+                    </p>
+                    <pre>
+<!--                 -->app.use(function(req, res, next){ 
+<!--                 -->    // Middleware 1 function body
+<!--                 -->    next(); //Pass controll to next in pipeline
+<!--                 -->});
+<!--                 -->app.use(function(req, res, next){ 
+<!--                 -->    // Middleware 2 function body
+<!--                 -->    next(); //Pass controll to next in pipeline
+<!--                 -->});</pre>    
+                    <h4>Third Party Middleware</h4>
+                    <a href="https://expressjs.com/en/resources/middleware.html" target="_blank" rel="noopener noreferrer">
+                        https://expressjs.com/en/resources/middleware.html
+                    </a>
+                    <h4>Spl Note:</h4>
+                    <pre>
+<!--                 -->if(user){ 
+<!--                 -->    return res.status(400).send('User already registerd.');
+<!--                 -->}</pre>
+                    <p>
+                        and
+                    </p> 
+                    <pre>
+<!--                 -->if(user){ 
+<!--                 -->    res.status(400).send('User already registerd.');
+<!--                 -->}</pre>
+                    <p>
+                        both will send the response but if we do not use 
+                        <span class="label label-info">return</span>
+                        then
+                        code continues exe to next lines.
+                    </p>               
+                    <p>
+                        
+                        <span class="badge">Check this by using console</span>
+                        
+                    </p>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+        <%- include('partials/include_js'); -%>
+
+
+</body>
+
+</html>

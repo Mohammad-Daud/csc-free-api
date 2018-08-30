@@ -6,6 +6,20 @@ module.exports = {
     register: function(req, res){
         let hashedPassword = bcrypt.hashSync(req.body.password, 8);
 
+        //Validae with JOI
+
+        User.findOne({
+            where:{
+                email: req.body.email
+            }
+        }).then(function(user){
+            if(user){
+                return res.status(400).send('User already registerd.');
+            }
+        });
+
+        
+
         User.create({
             name: req.body.name,
             email: req.body.email,
@@ -17,7 +31,7 @@ module.exports = {
             }, process.env.JWT_SECRET, {
                 expiresIn: 86400 // expires in 24 hours
             });
-            res.status(200).send({
+            return res.status(200).send({
                 auth: true,
                 token: token
             });

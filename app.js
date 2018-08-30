@@ -1,24 +1,34 @@
 require('dotenv').load();
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const createError   = require('http-errors');
+const express       = require('express');
+const path          = require('path');
+const cookieParser  = require('cookie-parser');
+const logger        = require('morgan');
+const favicon       = require('serve-favicon');
+const helmet        = require('helmet');
+const startupDebugger   = require('debug')('app:startup');
+const routes        = require('./routes');
+const testRoutes    = require('./routes/testroutes');
 
-const routes = require('./routes');
-var testRoutes = require('./routes/testroutes');
-
-var app = express();
+const app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(logger('dev'));
+//Middlewares
+app.use(helmet());
+if(process.env.NODE_ENV === 'development'){
+  app.use(logger('dev'));
+  startupDebugger('NODE_ENV: '+process.env.NODE_ENV);
+  startupDebugger('Morgan Enabled...');
+}
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(favicon(path.join(__dirname, 'public/images', 'favicon.ico')));
+
 
 //ALL ROUTES
 app.use('/', routes);
@@ -33,8 +43,8 @@ app.use(function(req, res, next) {
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
+  //res.locals.error = req.app.get('env') === 'development' ? err : {};
+  res.locals.error = process.env.NODE_ENV === 'development' ? err : {};
   // render the error page
   res.status(err.status || 500);
   res.render('error');

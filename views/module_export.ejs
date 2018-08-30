@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('partials/meta'); -%>
+        <title>
+
+            <%= process.env.APP_NAME %> -
+                <%= title %>
+
+        </title>
+        <%- include('partials/include_styles'); -%>
+</head>
+
+<body>
+
+    <%- include('partials/nav'); -%>
+
+        <div class="container">
+
+
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2>Export and use Modules</h2>
+                    <h4>Export as a prop of module obj</h4>
+                    <pre>
+<!--                    -->function abc(){ 
+
+<!--                    -->}
+
+<!--                    -->function xyz(){ 
+
+<!--                    -->}
+<!--                    -->module.export.abc = abc;
+<!--                    -->module.export.xyz = xyz;
+                    </pre>
+                    <p>Add a prop to module obj add assign that prop to some function</p>
+
+                    <h4>Built in Modules</h4>
+                    <p>
+                        <a target="_blank" href="https://nodejs.org/dist/latest-v8.x/docs/api/">
+                            https://nodejs.org/dist/latest-v8.x/docs/api/
+                        </a>
+                    </p>
+
+                    <h4>Back Tick</h4>
+                    <p>With back tick insted of concinate string by +</p>
+                    <pre>
+<!--                    -->console.log('Some String' + someVal);
+                    </pre>
+                    <pre>
+<!--                    -->console.log(`Some String ${someVal}`);
+                    </pre>
+
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+
+
+
+
+
+
+        <%- include('partials/include_js'); -%>
+
+
+</body>
+
+</html>

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const AuthController = require('../controllers/auth/AuthController');
+const NotesController = require('../controllers/NotesController');
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -23,6 +24,8 @@ router.get('/get-token', AuthController.getToken);
 
 
 
-
+//Notes
+router.get('/notes', NotesController.notes);
+router.get('/module-export', NotesController.moduleExport);
 
 module.exports = router;

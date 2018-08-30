@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const dbDebugger = require('debug')('app:db');
+
 const sequelize = require('../models/connection');
 const Country = require('../models/Country');
 const State = require('../models/State');
@@ -14,13 +16,13 @@ router.get('/connection', function (req, res, next) {
     sequelize
         .authenticate()
         .then(() => {
-            console.log('Connection has been established successfully.');
+            dbDebugger('Connection has been established successfully.');
             res.json({
                 msg: 'Connection has been established successfully.'
             });
         })
         .catch(err => {
-            console.error('Unable to connect to the database:', err);
+            dbDebugger('Unable to connect to the database:', err);
             res.json({
                 msg: 'Unable to connect to the database.',
                 err: err
@@ -72,6 +74,8 @@ router.get('/state-list-with-city', function (req, res, next) {
     });
 
 });
+
+//TRANSACTION
 
 router.post('/add-country', function (req, res) {
 
