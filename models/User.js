@@ -14,6 +14,9 @@ const User = sequelize.define('users', {
     },
     password: {
         type: Sequelize.STRING
+    },
+    role: {
+        type: Sequelize.STRING
     }
 },{
     createdAt: false,
