@@ -28,6 +28,7 @@ router.get('/users', function (req, res, next) {
 
 //Auth
 router.post('/auth', AuthController.auth);
+router.get('/register', AuthController.registerForm);
 router.post('/register', AuthController.register);
 router.get('/get-auth-user', auth, AuthController.authUser);
 router.get('/login', AuthController.login);

@@ -5,12 +5,31 @@ const dbDebugger = require('debug')('app:db');
 const sequelize = require('../models/connection');
 const Country = require('../models/Country');
 const State = require('../models/State');
+const User = require('../models/User');
+
+const mailer = require('../mailer/mailer');
 
 
 //GET /test
 router.get('/', function (req, res, next) {
     res.send('ok');
 });
+
+router.get('/mail', function (req, res, next) {
+    User.findOne().then(function(user){
+        let tpl = 'test.ejs';
+        let data = { name: 'Stranger' };
+        mailer(tpl, data, user).then(function(){
+            res.send('ok');
+        });
+    }).catch(function(e){
+        console.log(e);
+        res.send('notok');
+    });
+    
+});
+
+
 
 router.get('/connection', function (req, res, next) {
     sequelize

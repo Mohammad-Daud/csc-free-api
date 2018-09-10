@@ -23,15 +23,15 @@
         <div class="row">
             <div class="col-lg-4 col-lg-offset-4">
 
-                <h4>Login to get your access token.</h4>
+                
 
-                <p>
+                <p class="lead">
                     Access token will be sent to your registered email.
                 </p>
 
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Login Here</h3>
+                        <h3 class="panel-title">Register Here</h3>
                     </div>
                     <div class="panel-body">
 
@@ -45,29 +45,34 @@
                             
                             <div class="alert <%- alertClass %>">
                                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                
                                 <%- flash %>
                             </div>
                             
                         <% } %>
-                        <form action="/get-access-token" method="POST" role="form">
+                        <form action="/register" method="POST" role="form">
                         
                             <div class="form-group">
+                                <label for="">Name</label>
+                                
+                                <input type="text" class="form-control" name="name" placeholder="Name"  value="<%= oldFormData && typeof oldFormData.name !== 'undefined' ? oldFormData.name : '' %>">
+                            </div>
+                            
+                            <div class="form-group">
                                 <label for="">Email</label>
-                                <input type="text" class="form-control" name="email" placeholder="Email">
+                                <input type="text" class="form-control" name="email" placeholder="Email" value="<%= oldFormData && typeof oldFormData.email !== 'undefined' ? oldFormData.email : '' %>">
                             </div>
 
                             <div class="form-group">
                                 <label for="">Password</label>
-                                <input type="password" class="form-control" name="password" placeholder="password">
+                                <input type="password" class="form-control" name="password" placeholder="password" value="">
                             </div>
                         
                             
                         
                             <button type="submit" class="btn btn-primary">
-                                Get Access Token
+                                Register
                             </button>
-                            <a class="btn btn-default" href="/register">Register Here</a>
+                            <a class="btn btn-default" href="/login">Login</a>
                         </form>
                         
                     </div>

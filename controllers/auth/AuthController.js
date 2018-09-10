@@ -3,8 +3,14 @@ const User = require('../../models/User');
 const Joi = require('joi');
 const jwt = require('jsonwebtoken');
 const appDebugger = require('debug')('app:appDebugger');
+const mailer = require('../../mailer/mailer');
 
 module.exports = {
+    registerForm:function(req, res){
+        res.render('register',{
+            title:'Register'
+        });
+    },
     register: function(req, res){
         let hashedPassword = bcrypt.hashSync(req.body.password, 8); 
         //Synchonized so no need to then
@@ -19,7 +25,12 @@ module.exports = {
         
         let valResult = Joi.validate(req.body,valSchema);
 
-        if(valResult.error) return res.status(400).send(valResult);
+        if(valResult.error) {
+            req.session.oldFormData = req.body;
+            
+            redirect2Url(req,res,'register',valResult.error.details[0].message,'alert-danger');
+            
+        } 
 
         
 
@@ -34,32 +45,52 @@ module.exports = {
 
             //ABOVE line will not stop next line exe
 
-            if(user) return res.status(400).send('User already registerd.');
+            if(user) {
 
-            User.create({
-                name: req.body.name,
-                email: req.body.email,
-                password: hashedPassword
-            }).then(function(user){
+                req.session.oldFormData = req.body;
+            
 
-                
-                
-                var token = jwt.sign({
-                    id: user.id,
-                    role: user.role
-                }, process.env.JWT_SECRET, {
-                    expiresIn: 86400 // expires in 24 hours
-                });
-                return res.status(200).send({
-                    auth: true,
-                    token: token
-                });
+                redirect2Url(req,res,'register','User already registerd.','alert-danger');
+
+            } else {
+
+                User.create({
+
+                    name: req.body.name,
+                    email: req.body.email,
+                    password: hashedPassword
+
+                }).then(function(user){
     
-            }).catch(function(err){
-                return res.status(500).json({
-                    error:err
+                    req.session.oldFormData = req.body;
+
+                    let token = getToken(user);
+                    let tpl = 'token.ejs';
+                    let data = { token: token };
+                    mailer(tpl, data, user).then(function(){
+
+                        req.session.oldFormData = null;
+                        
+                        redirect2Url(req,res,'register','Token has been send to your registered email.','alert-success');
+
+                    }).catch(function(e){
+                        appDebugger(e);
+                        redirect2Url(req,res,'register','Something went wrong.');
+                    });
+
+            
+                    
+                    
+        
+                }).catch(function(err){
+
+                    appDebugger(err);
+                    redirect2Url(req,res,'register','Something went wrong.');
+
                 });
-            });
+
+            }
+            
             
         });
 
@@ -124,7 +155,7 @@ module.exports = {
         let valResult = Joi.validate(req.body,valSchema);
 
         if(valResult.error) {
-            redirect2Login(req,res,valResult.error.details[0].message);
+            redirect2Url(req,res,'login',valResult.error.details[0].message,'alert-danger');
         } else {
             User.findOne({
                 where: {
@@ -135,13 +166,24 @@ module.exports = {
                 if(matched){
                     //Send token
                     let token = getToken(user);
-                    res.send(token);
+                    let tpl = 'token.ejs';
+                    let data = { token: token };
+                    mailer(tpl, data, user).then(function(){
+                        
+                        redirect2Url(req,res,'login','Token has been send to your registered email.','alert-success');
+
+                    }).catch(function(e){
+                        appDebugger(e);
+                        redirect2Url(req,res,'login','Something went wrong.');
+                    });
+                    
+                    
                 } else {
-                    redirect2Login(req,res,'Something went wrong.');
+                    redirect2Url(req,res,'login','Something went wrong.');
                 }
             }).catch(function(e){
                 appDebugger(e);
-                redirect2Login(req,res,'Something went wrong.');
+                redirect2Url(req,res,'login','Something went wrong.');
             });
         } 
 
@@ -153,10 +195,21 @@ module.exports = {
     
 }
 
-function redirect2Login(req,res,msg){
+function redirect2Url(req,res,url,msg,alertClass){
+    req.session.alertClass = 'alert-danger';
+    if(alertClass){
+        req.session.alertClass = alertClass;
+    }
     req.session.flash = msg;
-    res.redirect('login');
+    if(url){
+        res.redirect(url);
+    }
+    res.redirect('/');
 }
+
+
+
+
 
 function getToken(user){
     
