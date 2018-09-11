@@ -41,14 +41,7 @@
                         
                         
 
-                        <% if (flash) { %>
-                            
-                            <div class="alert <%- alertClass %>">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                <%- flash %>
-                            </div>
-                            
-                        <% } %>
+                        <%- include('partials/notifications'); -%>
                         <form action="/register" method="POST" role="form">
                         
                             <div class="form-group">

@@ -4,6 +4,7 @@ const Joi = require('joi');
 const jwt = require('jsonwebtoken');
 const appDebugger = require('debug')('app:appDebugger');
 const mailer = require('../../mailer/mailer');
+const redirect2Url = require('../../helpers/redirect2Url');
 
 module.exports = {
     registerForm:function(req, res){
@@ -132,16 +133,25 @@ module.exports = {
         });
 
     },
+    /*
+    * Get Authorized User
+    */
     authUser: async function(req,res){
         const user = await User.findById(req.user.id, {attributes: ['name', 'email', 'role']});
         if(!user) return res.status(400).send('Something went wrong!!');
         res.status(200).send(user); 
     },
+    /*
+    * Show Login Page
+    */
     login: function(req,res){
         res.render('login',{
             title:'Login'
         });
     },
+    /*
+    * Get Access token
+    */
     getAccessToken:function(req,res){
         const password  = req.body.password;
         const email = req.body.email;
@@ -155,6 +165,7 @@ module.exports = {
         let valResult = Joi.validate(req.body,valSchema);
 
         if(valResult.error) {
+            req.session.oldFormData = req.body;
             redirect2Url(req,res,'login',valResult.error.details[0].message,'alert-danger');
         } else {
             User.findOne({
@@ -162,15 +173,22 @@ module.exports = {
                     email: email
                 }
             }).then(function(user){
-                let matched = bcrypt.compareSync(password, user.password);
+                let matched = false;
+                if(user){
+                    matched = bcrypt.compareSync(password, user.password);
+                }
+                
                 if(matched){
                     //Send token
                     let token = getToken(user);
                     let tpl = 'token.ejs';
                     let data = { token: token };
-                    mailer(tpl, data, user).then(function(){
+                    mailer(tpl, data, user, 'Your Token').then(function(){
+
+                        //set user cookie session
+                        req.session.userSession = user;
                         
-                        redirect2Url(req,res,'login','Token has been send to your registered email.','alert-success');
+                        redirect2Url(req,res,'/','Token has been send to your registered email.','alert-success');
 
                     }).catch(function(e){
                         appDebugger(e);
@@ -179,7 +197,8 @@ module.exports = {
                     
                     
                 } else {
-                    redirect2Url(req,res,'login','Something went wrong.');
+                    req.session.oldFormData = req.body;
+                    redirect2Url(req,res,'login','Either email or password is wrong.');
                 }
             }).catch(function(e){
                 appDebugger(e);
@@ -191,21 +210,17 @@ module.exports = {
 
         
 
+    },
+
+    logout: function(req,res){
+        if(req.session.userSession) req.session.userSession = null;
+        redirect2Url(req,res,'/');
     }
     
 }
 
-function redirect2Url(req,res,url,msg,alertClass){
-    req.session.alertClass = 'alert-danger';
-    if(alertClass){
-        req.session.alertClass = alertClass;
-    }
-    req.session.flash = msg;
-    if(url){
-        res.redirect(url);
-    }
-    res.redirect('/');
-}
+
+
 
 
 

@@ -1,8 +1,55 @@
 
 const Sequelize = require('sequelize');
 const Country = require('../models/Country');
+const sequelize = require('../models/connection');
 const Op = Sequelize.Op;
+const appDebugger = require('debug')('app:appDebugger');
+const redirect2ErrorPage = require('../helpers/redirect2ErrorPage');
+
 module.exports = {
+
+    index:async function(req,res){
+
+        try {
+
+            let tables = await sequelize.query('show tables');
+            
+            res.render('reports',{
+                title:'Countries Dynamic Report',
+                tables:tables
+            });
+            
+        } catch (error) {
+
+            appDebugger(error);
+            redirect2ErrorPage(res,'500');
+            
+            
+        }
+        
+
+    },
+
+    getColumns:async function(req,res){
+        let tableName =  req.query.tableName;
+        try {
+
+            //show columns from `cities` where `Key` != "PRI" and `Field` != "state_id" 
+            
+            let columns = await sequelize.query(`SHOW COLUMNS FROM ${tableName} where \`Key\` != "PRI"`);
+            console.log(columns[0][1].Field);
+            res.render('ajax/get_columns', {
+                columns:columns[0]
+            });
+            
+
+        } catch (error) {
+
+            appDebugger(error);
+            res.status(400).send('Columns not found');
+            
+        }
+    },
 
     countries: async function(req,res){
 

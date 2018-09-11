@@ -41,20 +41,12 @@
                         
                         
 
-                        <% if (flash) { %>
-                            
-                            <div class="alert <%- alertClass %>">
-                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                
-                                <%- flash %>
-                            </div>
-                            
-                        <% } %>
+                        <%- include('partials/notifications'); -%>
                         <form action="/get-access-token" method="POST" role="form">
                         
                             <div class="form-group">
                                 <label for="">Email</label>
-                                <input type="text" class="form-control" name="email" placeholder="Email">
+                                <input type="text" class="form-control" name="email" placeholder="Email" value="<%= oldFormData && typeof oldFormData.email !== 'undefined' ? oldFormData.email : '' %>">
                             </div>
 
                             <div class="form-group">

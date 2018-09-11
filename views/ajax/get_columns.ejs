@@ -1,0 +1,14 @@
+<div class="col-lg-12">
+        <p>Include/Exclude</p>
+        <div class="checkbox">
+                <% columns.forEach(function(column){ %>
+            <label>
+                    <input type="checkbox" name="<%- column.Field %>" value="true">
+                    
+                    <%- column.Field %>
+            </label>
+            
+
+            <% }); %>
+        </div>
+    </div>

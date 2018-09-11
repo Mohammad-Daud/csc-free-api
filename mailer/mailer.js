@@ -6,16 +6,16 @@ const path = require('path');
 
 
 const transporter = nodemailer.createTransport({
-    host: 'smtp.mailtrap.io',
-    port: 2525,
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
     secure: false, // use SSL
     auth: {
-        user: '4776981164158ef31',
-        pass: 'd2870c0c7f9525'
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS
     }
 });
 
-module.exports = function(tpl, data, user){
+module.exports = function(tpl, data, user, subject=''){
 
     const p = new Promise(function(resolve, reject){
 
@@ -30,12 +30,12 @@ module.exports = function(tpl, data, user){
                 reject(err);
             } else {
                 var mainOptions = {
-                    from: '"Tester" testmail@zoho.com',
+                    from: '"'+ process.env.FROM_NAME +'" '+process.env.FROM_ADDR,
                     to: user.email,
-                    subject: 'Hello, world',
+                    subject: subject,
                     html: data
                 };
-                console.log("html data ======================>", mainOptions.html);
+                //console.log("html data ======================>", mainOptions.html);
                 transporter.sendMail(mainOptions, function (err, info) {
                     if (err) {
                         appDebugger(err);
