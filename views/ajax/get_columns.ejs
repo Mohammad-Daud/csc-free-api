@@ -1,14 +1,31 @@
 <div class="col-lg-12">
-        <p>Include/Exclude</p>
-        <div class="checkbox">
-                <% columns.forEach(function(column){ %>
-            <label>
-                    <input type="checkbox" name="<%- column.Field %>" value="true">
-                    
-                    <%- column.Field %>
-            </label>
-            
 
-            <% }); %>
-        </div>
-    </div>
+        <label for="">Columns</label>
+        <table class="table table-bordered">
+                <% columns.forEach(function(column){ %>
+                <tr>
+                        <td>
+                                <div class="checkbox">
+                                        <label>
+                                                <input type="checkbox" name="<%- column.Field %>" value="true">
+
+                                                <%- column.Field %>
+                                        </label>
+                                </div>
+                        </td>
+                        <td>
+                                <select name="selectedRuleType" class="form-control">
+                                        <option value="<%- column.Field %>###like">LIKE</option>
+                                        <option value="<%- column.Field %>###equal">EQUAL</option>
+                                        <option value="<%- column.Field %>###startwith">START WITH</option>
+                                        <option value="<%- column.Field %>###endwith">END WITH</option>
+                                </select>
+                        </td>
+                        <td>
+                                <input type="text" name="ruleVal" class="form-control">
+                        </td>
+                </tr>
+                <% }); %>
+        </table>
+
+</div>

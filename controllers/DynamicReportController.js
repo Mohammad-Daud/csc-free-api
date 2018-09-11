@@ -5,6 +5,8 @@ const sequelize = require('../models/connection');
 const Op = Sequelize.Op;
 const appDebugger = require('debug')('app:appDebugger');
 const redirect2ErrorPage = require('../helpers/redirect2ErrorPage');
+const UserReport = require('../models/UserReport');
+const redirect2Url = require('../helpers/redirect2Url');
 
 module.exports = {
 
@@ -115,6 +117,79 @@ module.exports = {
 
         }
         
+
+    },
+
+    myReports: async function(req,res){
+
+        try {
+
+            const reports = await UserReport.findAll();
+            res.render('my_reports', {
+                title:"my reports",
+                reports:reports
+            });
+            
+        } catch (e) {
+
+            appDebugger(e);
+            redirect2Url(req,res,'/','Something went wrong.');
+            
+        }
+
+        
+    },
+
+    saveReport: function(req,res){
+        
+        
+
+        const dbTable = req.body.dbTable;
+        const name = req.body.name;
+        const selectedRuleType = req.body.selectedRuleType;
+        const ruleVal = req.body.ruleVal;
+        const reportTitle = req.body.reportTitle;
+        const user = req.session.userSession;
+        let indexArr = [];
+
+        
+        ruleVal.forEach(element => {
+            console.log(element);
+            if(element){
+                indexArr.push(element);
+            }
+        });
+
+        console.log(indexArr);
+
+        selectedRuleType.forEach(element => {
+            console.log(element.split('###'));
+            //element.split('###');
+        });
+
+        //save only rep name 
+        return res.send(req.body);
+
+        UserReport.sync().then(() => {
+            UserReport.create({
+                reportTitle: reportTitle,
+                tableName: dbTable,
+                user_id: user.id
+            }).then(function(report){
+                console.log(report);
+                redirect2Url(req,res,'my-reports','Report Saved.','alert-success');
+            }).catch(function(e){
+                appDebugger(e);
+                redirect2Url(req,res,'/','Something went wrong.');
+            });
+        }).catch(e => {
+            appDebugger(e);
+            redirect2Url(req,res,'/','Something went wrong.');
+        });
+
+        
+        
+
 
     }
 

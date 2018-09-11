@@ -17,6 +17,7 @@ const City = sequelize.define('cities', {
 },{
     createdAt: false,
     updatedAt: false,
+    tableName: 'cities',
 });
 
 //State.hasMany(City, {foreignKey: 'state_id'});

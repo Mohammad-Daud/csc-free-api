@@ -1,28 +1,31 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../models/connection');
-const User     = require('../models/User');
+const UserReport     = require('../models/UserReport');
 
 
-const UserReport = sequelize.define('user_reports', {
-    reportTitle: {
+const ReportColumn = sequelize.define('report_columns', {
+    columnTitle: {
         type: Sequelize.STRING
     },
-    tableName: {
+    selectedRuleType: {
+        type: Sequelize.STRING
+    },
+    ruleValue: {
         type: Sequelize.STRING
     },
     user_id: {
         type: Sequelize.INTEGER,
         references:{
-            model: User,
+            model: UserReport,
             key: 'id',
         }
     }
 },{
     createdAt: false,
     updatedAt: false,
-    tableName: 'user_reports',
+    tableName: 'report_columns',
 });
 
 
 
-module.exports = UserReport;
+module.exports = ReportColumn;

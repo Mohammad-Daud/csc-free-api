@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <%- include('partials/meta'); -%>
+    <title>
+
+        <%= process.env.APP_NAME %> -
+        <%= title %>
+
+    </title>
+    <%- include('partials/include_styles'); -%>
+</head>
+
+<body>
+
+    <%- include('partials/nav'); -%>
+
+    <div class="container">
+
+
+
+        <div class="row">
+            <div class="col-lg-12">
+                <h2>Saved Reports </h2>
+
+                <%- include('partials/notifications'); -%>
+
+                
+                
+
+
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Report</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% reports.forEach(function(report){ %>
+                        <tr>
+                            <td><%- report.reportTitle %></td>
+                            <td>
+                                <a href="http://">Get Report</a>
+                            </td>
+                        </tr>
+                        <% }); %>
+                    </tbody>
+                </table>
+
+
+
+
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+    <%- include('partials/include_js'); -%>
+
+
+
+
+</body>
+
+</html>

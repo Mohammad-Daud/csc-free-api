@@ -17,6 +17,7 @@ const State = sequelize.define('states', {
 },{
     createdAt: false,
     updatedAt: false,
+    tableName: 'states',
 });
 
 /*

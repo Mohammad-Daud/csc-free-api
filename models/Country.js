@@ -15,7 +15,8 @@ const Country = sequelize.define('countries', {
 },{
     createdAt: false,
     updatedAt: false,
-}
+    tableName: 'countries',
+},
 // ,{
     
 //     associate: function(models){

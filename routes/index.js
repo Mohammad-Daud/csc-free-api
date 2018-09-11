@@ -46,6 +46,9 @@ router.get('/module-export', NotesController.moduleExport);
 router.get('/dynamic-report', sessionBasedAuth, DynamicReportController.index);
 router.get('/dynamic-report/get-columns', sessionBasedAuth, DynamicReportController.getColumns);
 router.get('/dynamic-report/countries', sessionBasedAuth, DynamicReportController.countries);
+router.get('/my-reports', sessionBasedAuth, DynamicReportController.myReports);
+router.post('/save-report', sessionBasedAuth, DynamicReportController.saveReport);
+
 
 
 //ERRORS
