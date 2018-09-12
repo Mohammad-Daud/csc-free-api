@@ -260,6 +260,7 @@ module.exports = {
             console.log(wherePart);
 
             console.log(`select ${cols} from ${tableName} ${wherePart};`);
+            
 
             let queryResults = await sequelize.query(`select ${cols} from ${tableName} ${wherePart};`);
 
