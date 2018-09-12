@@ -48,6 +48,7 @@ router.get('/dynamic-report/get-columns', sessionBasedAuth, DynamicReportControl
 router.get('/dynamic-report/countries', sessionBasedAuth, DynamicReportController.countries);
 router.get('/my-reports', sessionBasedAuth, DynamicReportController.myReports);
 router.post('/save-report', sessionBasedAuth, DynamicReportController.saveReport);
+router.get('/get-report/:id',sessionBasedAuth,DynamicReportController.getReport);
 
 
 

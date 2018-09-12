@@ -13,7 +13,7 @@ const ReportColumn = sequelize.define('report_columns', {
     ruleValue: {
         type: Sequelize.STRING
     },
-    user_id: {
+    report_id: {
         type: Sequelize.INTEGER,
         references:{
             model: UserReport,

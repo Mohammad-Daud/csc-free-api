@@ -7,6 +7,7 @@ const appDebugger = require('debug')('app:appDebugger');
 const redirect2ErrorPage = require('../helpers/redirect2ErrorPage');
 const UserReport = require('../models/UserReport');
 const redirect2Url = require('../helpers/redirect2Url');
+const ReportColumn = require('../models/ReportColumn');
 
 module.exports = {
 
@@ -145,30 +146,18 @@ module.exports = {
         
 
         const dbTable = req.body.dbTable;
-        const name = req.body.name;
+        
         const selectedRuleType = req.body.selectedRuleType;
         const ruleVal = req.body.ruleVal;
         const reportTitle = req.body.reportTitle;
         const user = req.session.userSession;
-        let indexArr = [];
+        let finalArr = {};
 
-        
-        ruleVal.forEach(element => {
-            console.log(element);
-            if(element){
-                indexArr.push(element);
+        selectedRuleType.forEach(function(val, index){
+            if(ruleVal[index]){
+                finalArr[val] = ruleVal[index];
             }
         });
-
-        console.log(indexArr);
-
-        selectedRuleType.forEach(element => {
-            console.log(element.split('###'));
-            //element.split('###');
-        });
-
-        //save only rep name 
-        return res.send(req.body);
 
         UserReport.sync().then(() => {
             UserReport.create({
@@ -176,7 +165,39 @@ module.exports = {
                 tableName: dbTable,
                 user_id: user.id
             }).then(function(report){
-                console.log(report);
+                
+
+                Object.keys(finalArr).map(function(objectKey) {
+
+                    let value = finalArr[objectKey];
+        
+                    
+                    
+                    ReportColumn.sync().then(function(){
+                        
+                        ReportColumn.create({
+                            columnTitle: objectKey.split('###')[0],
+                            selectedRuleType: objectKey.split('###')[1],
+                            ruleValue: value,
+                            report_id: report.id
+                        }).then(function(reportCol){
+                            appDebugger(reportCol);
+                        }).catch(function(e){
+                            appDebugger(e);
+                            redirect2Url(req,res,'/','Something went wrong.');
+                        });
+        
+                    }).catch(function(e){
+        
+                        appDebugger(e);
+                        redirect2Url(req,res,'/','Something went wrong.');
+        
+                    });
+                    
+                    
+                    
+                });
+
                 redirect2Url(req,res,'my-reports','Report Saved.','alert-success');
             }).catch(function(e){
                 appDebugger(e);
@@ -190,6 +211,78 @@ module.exports = {
         
         
 
+
+    },
+
+    getReport: async function(req,res){
+
+        const reportId = req.params.id;
+        const user = req.session.userSession;
+
+        const sqlMap = {
+            "like":'like',
+            "startwith": 'like',
+            "equal": '='
+        };
+
+
+        try {
+
+            const userRep = await UserReport.findOne({
+                where:{
+                    id:reportId,
+                    user_id:user.id
+                }
+            });
+
+            const userRepCols = await ReportColumn.findAll({
+                where:{
+                    report_id:userRep.id
+                }
+            });
+            
+            const reportTitle = userRep.reportTitle;
+            const tableName = userRep.tableName;
+
+            let cols = '';
+            let wherePart = 'where 1 and ';
+            
+            userRepCols.forEach(function(elem){
+                let s = elem.selectedRuleType;
+                cols += elem.columnTitle + ',';
+                wherePart += elem.columnTitle + ' ' + sqlMap[s] + ' ' + '"'+elem.ruleValue+'"' + ' and ';
+            });
+
+            cols = cols.replace(/,\s*$/, "");
+            wherePart = wherePart.replace(/and\s*$/, "");
+            wherePart = wherePart.replace(/ \s*$/, "");
+
+            console.log(wherePart);
+
+            console.log(`select ${cols} from ${tableName} ${wherePart};`);
+
+            let queryResults = await sequelize.query(`select ${cols} from ${tableName} ${wherePart};`);
+
+            console.log(queryResults);
+
+            //res.send(userRepCols);
+
+            res.render('view_report',{
+                queryResults:queryResults[0],
+                title:'Report',
+                userRepCols:userRepCols
+            })
+            
+        } catch (error) {
+
+            appDebugger(error);
+            redirect2Url(req,res,'/','Something went wrong.');
+            
+        }
+
+        
+
+        
 
     }
 
