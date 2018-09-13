@@ -22,6 +22,7 @@
     "mysql2": "^1.6.1",
     "nodemailer": "^4.6.8",
     "sequelize": "^4.38.0",
-    "serve-favicon": "^2.5.0"
+    "serve-favicon": "^2.5.0",
+    "winston": "^3.0.0"
   }
 }

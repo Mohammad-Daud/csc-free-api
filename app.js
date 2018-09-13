@@ -1,4 +1,5 @@
 require('dotenv').load();
+
 const createError   = require('http-errors');
 const express       = require('express');
 const path          = require('path');
@@ -9,16 +10,16 @@ const helmet        = require('helmet');
 const cookieSession = require('cookie-session');
 const flashMsg      = require('./middleware/flashMsg');
 const unsetFlashMsg = require('./middleware/unsetFlashMsg');
+const errorHandler = require('./middleware/errorHandler');
 const startupDebugger   = require('debug')('app:startup');
 const routes        = require('./routes');
 const testRoutes    = require('./routes/testroutes');
 
 const app = express();
 
-if(!process.env.JWT_SECRET){
-  console.error('FATAL ERROR: JWT_SECRET(jwt private key) not set.');
-  process.exit(1);
-}
+
+require('./startup/logging')();
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -55,17 +56,8 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
-
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  //res.locals.error = req.app.get('env') === 'development' ? err : {};
-  res.locals.error = process.env.NODE_ENV === 'development' ? err : {};
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+// error handler middleware -- should on after all middleware
+app.use(errorHandler);
 
 
 

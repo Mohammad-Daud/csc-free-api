@@ -141,7 +141,7 @@ module.exports = {
         
     },
 
-    saveReport: function(req,res){
+    saveReport: function(req,res,next){
         
         
 
@@ -183,14 +183,12 @@ module.exports = {
                         }).then(function(reportCol){
                             appDebugger(reportCol);
                         }).catch(function(e){
-                            appDebugger(e);
-                            redirect2Url(req,res,'/','Something went wrong.');
+                            next(e);
                         });
         
                     }).catch(function(e){
         
-                        appDebugger(e);
-                        redirect2Url(req,res,'/','Something went wrong.');
+                        next(e);
         
                     });
                     
@@ -200,12 +198,10 @@ module.exports = {
 
                 redirect2Url(req,res,'my-reports','Report Saved.','alert-success');
             }).catch(function(e){
-                appDebugger(e);
-                redirect2Url(req,res,'/','Something went wrong.');
+                next(e);
             });
         }).catch(e => {
-            appDebugger(e);
-            redirect2Url(req,res,'/','Something went wrong.');
+            next(e);
         });
 
         
@@ -214,7 +210,7 @@ module.exports = {
 
     },
 
-    getReport: async function(req,res){
+    getReport: async function(req,res,next){
 
         const reportId = req.params.id;
         const user = req.session.userSession;
@@ -276,8 +272,9 @@ module.exports = {
             
         } catch (error) {
 
-            appDebugger(error);
-            redirect2Url(req,res,'/','Something went wrong.');
+            next(error);
+
+            
             
         }
 
