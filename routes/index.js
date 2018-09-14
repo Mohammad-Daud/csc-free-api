@@ -3,6 +3,7 @@ const router = express.Router();
 const AuthController = require('../controllers/auth/AuthController');
 const NotesController = require('../controllers/NotesController');
 const DynamicReportController = require('../controllers/DynamicReportController');
+const CscApiController = require('../controllers/api/CscApiController');
 const auth = require('../middleware/auth');
 const isAdmin = require('../middleware/isAdmin');
 const guest = require('../middleware/guest');
@@ -42,6 +43,12 @@ router.get('/logout', AuthController.logout);
 router.get('/notes',[auth, isAdmin], NotesController.notes);
 router.get('/module-export', NotesController.moduleExport);
 
+//CSC API
+router.get('/countries-list',auth, CscApiController.countriesList);
+router.get('/state-list-with-city', auth, CscApiController.stateListWithCity);
+router.get('/countries-list-with-state', auth, CscApiController.countriesListWithState);
+router.get('/state-list', auth, CscApiController.stateList);
+
 //DYNAMIC REPORTS
 router.get('/dynamic-report', sessionBasedAuth, DynamicReportController.index);
 router.get('/dynamic-report/get-columns', sessionBasedAuth, DynamicReportController.getColumns);
@@ -49,6 +56,7 @@ router.get('/dynamic-report/countries', sessionBasedAuth, DynamicReportControlle
 router.get('/my-reports', sessionBasedAuth, DynamicReportController.myReports);
 router.post('/save-report', sessionBasedAuth, DynamicReportController.saveReport);
 router.get('/get-report/:id',sessionBasedAuth,DynamicReportController.getReport);
+
 
 
 

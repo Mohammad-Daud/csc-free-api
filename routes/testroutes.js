@@ -6,7 +6,6 @@ const sequelize = require('../models/connection');
 const Country = require('../models/Country');
 const State = require('../models/State');
 const User = require('../models/User');
-
 const mailer = require('../mailer/mailer');
 
 
@@ -49,50 +48,7 @@ router.get('/connection', function (req, res, next) {
         });
 });
 
-router.get('/countries-list', function (req, res, next) {
 
-    Country.findAll().then(function (data) {
-        res.json({
-            countries: data
-        });
-    });
-
-});
-
-router.get('/countries-list-with-state', function (req, res, next) {
-
-    //EGER
-    Country.findAll({
-        include: [{
-            model: State
-        }]
-    }).then(function (data) {
-        res.send(data);
-    });
-
-});
-
-router.get('/state-list', function (req, res, next) {
-
-    State.findAll().then(function (data) {
-        res.json({
-            state: data
-        });
-    });
-
-});
-
-router.get('/state-list-with-city', function (req, res, next) {
-
-    State.findAll({
-        include: [{
-            model: City
-        }]
-    }).then(function (data) {
-        res.send(data);
-    });
-
-});
 
 //TRANSACTION
 

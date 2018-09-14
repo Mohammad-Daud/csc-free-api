@@ -20,6 +20,5 @@ const City = sequelize.define('cities', {
     tableName: 'cities',
 });
 
-//State.hasMany(City, {foreignKey: 'state_id'});
 
 module.exports = City;

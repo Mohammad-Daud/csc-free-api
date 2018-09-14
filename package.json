@@ -24,5 +24,12 @@
     "sequelize": "^4.38.0",
     "serve-favicon": "^2.5.0",
     "winston": "^3.0.0"
+  },
+  "apidoc": {
+    "name": "CSC Free API",
+    "version": "1.0.0",
+    "description": "Country state and city free api",
+    "title": "CSC Free API",
+    "url" : "https://api.github.com/v1"
   }
 }

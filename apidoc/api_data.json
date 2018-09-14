@@ -1,0 +1,25 @@
+[
+  {
+    "type": "get",
+    "url": "/countries-list",
+    "title": "Request All Countries List",
+    "name": "GetCountries",
+    "group": "Country",
+    "parameter": {
+      "fields": {
+        "Parameter": [
+          {
+            "group": "Parameter",
+            "type": "String",
+            "optional": false,
+            "field": "x-auth-token",
+            "description": "<p>Auth Token.</p>"
+          }
+        ]
+      }
+    },
+    "version": "0.0.0",
+    "filename": "controllers/api/CscApiController.js",
+    "groupTitle": "Country"
+  }
+]
